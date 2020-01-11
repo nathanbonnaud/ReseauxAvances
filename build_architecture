@@ -5,11 +5,12 @@ ip netns add h1
 ip netns add h2
 
 # créer le switch
-ovs-vsctl add-br s1
+ovs-vsctl add-br s1 
 
 # créer les liens
 ip link add h1-eth0 type veth peer name s1-h1
 ip link add h2-eth0 type veth peer name s1-h2
+
 
 
 # accrocher les liens aux namespaces
@@ -22,10 +23,11 @@ ovs-vsctl add-port s1 s1-h1
 ovs-vsctl add-port s1 s1-h2
 
 
+
 # activer les interfaces du namespace root
 ip link set dev s1-h1 up
 ip link set dev s1-h2 up
-ip link set s1 up
+
 
 # activer les interfaces des namespaces h1 et h2
 ip netns exec h1 ip link set dev h1-eth0 up
@@ -33,7 +35,14 @@ ip netns exec h2 ip link set dev h2-eth0 up
 ip netns exec h1 ip link set dev lo up
 ip netns exec h2 ip link set dev lo up
 
-#relie l'adresse au switch
-ip addr add 10.10.10.1 dev s1
+#configurer s1
+ip addr add dev  s1 10.10.10.1/24
+ip link set dev s1 up
+
+sysctl -w net.ipv4.ip_forward=1
+
+
+
+
 
 
