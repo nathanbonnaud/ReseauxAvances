@@ -1,0 +1,5 @@
+#!/bin/bash -x
+
+sudo iptables -t filter -F
+
+sudo iptables -t nat -F
